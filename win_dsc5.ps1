@@ -109,8 +109,12 @@ try
     }
     ElseIf (($testResult.InDesiredState) -ne $true) 
     {
-        Invoke-DscResource -Method Set @Config
+        Invoke-DscResource -Method Set @Config -ErrorVariable SetError -ErrorAction SilentlyContinue
         Set-Attr $result "changed" $true
+        if ($SetError)
+        {
+           throw ($SetError[0].Exception.Message)
+        }
     }
 
 }
