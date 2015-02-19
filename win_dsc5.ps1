@@ -79,6 +79,10 @@ $attrib.Keys | foreach-object {
     {
         [String]$KeyValue = $attrib.Item($_)
     }
+    ElseIf ($prop.PropertyType -eq "[string[]]")
+    {
+        [String[]]$KeyValue = $attrib.Item($_)
+    }
     ElseIf ($prop.PropertyType -eq "[bool]")
     {
         if ($attrib.Item($_) -like "true")
