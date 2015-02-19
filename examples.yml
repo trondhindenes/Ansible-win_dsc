@@ -1,0 +1,22 @@
+---
+- hosts: windows
+  tasks:
+  - name: Unpack my file
+    win_dsc:
+      resource_name="archive"
+      ensure="Present"
+      path="C:\Temp\zipfile.zip"
+      destination="C:\Temp\Temp2"
+
+  - name: Unpack my file
+    win_dsc:
+      resource_name="archive"
+      ensure="Present"
+      path="C:\Temp\zipfile.zip"
+      destination="C:\Temp\{{ ansible_hostname }}"
+
+  - name: Configure IIS/Telnet Client
+    win_dsc:
+      resource_name='WindowsFeature'
+      ensure='Present'
+      item_name="Web-server"
