@@ -46,8 +46,8 @@
 - name: Make sure the MySql extention for PHP is in the main PHP path
   win_dsc5:
     resource_name="File"
-    SourcePath="C:\php\ext\php_mysql.dll"
-    DestinationPath="C:\php\php_mysql.dll"
+    SourcePath="{{ phpPath }}\ext\php_mysql.dll"
+    DestinationPath="{{ phpPath }}\php_mysql.dll"
     MatchSource="true"
   tags:
     - Payload
@@ -56,8 +56,8 @@
 - name: Make sure the php.ini is in the Php folder
   win_dsc5:
     resource_name="File"
-    SourcePath="C:\Program Files\WindowsPowerShell\Modules\xPhp\Samples\PhpConfigTemplate.txt"
-    DestinationPath="C:\php\php.ini"
+    SourcePath="{{ phpIniConfigTemplate }}"
+    DestinationPath="{{ phpPath }}\php.ini"
     MatchSource="true"
   tags:
     - Config
@@ -66,7 +66,7 @@
   win_dsc5:
     resource_name="xIisModule"
     item_name="phpFastCgi"
-    Path="C:\php\php-cgi.exe"
+    Path="{{ phpPath }}\php-cgi.exe"
     RequestPath="*.php"
     Verb="*"
     Ensure="Present"
@@ -78,7 +78,7 @@
   win_dsc5:
     resource_name="Environment"
     item_name="Path"
-    value="C:\php"
+    value="{{ phpPath }}"
     Ensure="Present"
     Path="true"
   tags:
