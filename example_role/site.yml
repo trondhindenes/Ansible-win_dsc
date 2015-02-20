@@ -1,0 +1,8 @@
+---
+- name: PHP, MySQL, Wordpress
+  hosts: windows
+
+  roles:
+    - IIS_php
+    - Win_MySQL
+    - Win_Wordpress

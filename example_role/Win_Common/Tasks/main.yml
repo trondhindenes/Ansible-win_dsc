@@ -1,0 +1,9 @@
+# tasks file for Win_Wordpress
+- name: Make sure the WMF5 February Preview is installed
+  win_dsc:
+    resource_name="package"
+    item_name:"WMF 5 February Preview"
+    
+  tags:
+    - Payload
+    - Config

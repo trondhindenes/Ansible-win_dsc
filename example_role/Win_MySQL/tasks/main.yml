@@ -1,0 +1,43 @@
+---
+# tasks file for Win_MySQL
+- name: Make sure the mySqlServer installer package is present
+  win_dsc5:
+    resource_name="Package"
+    Path="http://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-5.6.17.0.msi"
+    ProductId="{437AC169-780B-47A9-86F6-14D43C8F596B}"
+    item_name="MySQL Installer"
+
+- name: Make sure the mySqlServer exists with the correct root credential
+  win_dsc5:
+    resource_name="xMySqlServer"
+    ServiceName="MySqlService"
+    Ensure="Present"
+    RootPassword_username="mysqladmin"
+    RootPassword_password="MuchoSecrit"
+
+- name: Make sure the MySql WordPress database exists
+  win_dsc5:
+    resource_name="xMySqlDatabase"
+    Ensure="Present"
+    item_name="WordPressDB"
+    ConnectionCredential_username="mysqladmin"
+    ConnectionCredential_password="MuchoSecrit"
+
+- name: Make sure the MySql WordPress user exists
+  win_dsc5:
+    resource_name="xMySqlUser"
+    item_name="wordpressuser"
+    Ensure="present"
+    ConnectionCredential_username="mysqladmin"
+    ConnectionCredential_password="MuchoSecrit"
+    Credential_username="wordpressuser"
+    Credential_password="NotSoSecrit"
+
+- name: Make sure the MySql WordPress user has access to tho WordPress database
+  win_dsc5:
+    resource_name="xMySqlGrant"
+    username="wordpressuser"
+    DatabaseName="WordPressDB"
+    Ensure="present"
+    ConnectionCredential_username="mysqladmin"
+    ConnectionCredential_password="MuchoSecrit"
