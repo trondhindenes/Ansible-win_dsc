@@ -73,15 +73,38 @@ $attrib.Keys | foreach-object {
     $prop = $resource.Properties | where {$_.Name -eq $key}
     if (!$prop)
     {
-        Fail-Json -obj $result -message "Property $key in resource $resourcename is not a valid property"
+        #If its a credential specified as "credential", Ansible will support credential_username and credential_password. Need to check for that
+        $prop = $resource.Properties | where {$_.Name -eq $key.Replace("_username","")}
+        if ($prop)
+        {
+            #We need to construct a cred object. At this point keyvalue is the username, so grab the password
+            $PropUserNameValue = $attrib.Item($_)
+            $PropPassword = $key.Replace("_username","_password")
+            $PropPasswordValue = $attrib.$PropPassword
+
+            $cred = New-Object System.Management.Automation.PSCredential ($PropUserNameValue, ($PropPasswordValue | ConvertTo-SecureString -AsPlainText -Force))
+            [System.Management.Automation.PSCredential]$KeyValue = $cred
+            $config.Property.Add($key.Replace("_username",""),$KeyValue)
+        }
+        ElseIf ($key.Contains("_password"))
+        {
+            #Do nothing. We suck in the password in the handler for _username, so we can just skip it.
+        }
+        Else
+        {
+            Fail-Json -obj $result -message "Property $key in resource $resourcename is not a valid property"
+        }
+        
     }
     ElseIf ($prop.PropertyType -eq "[string]")
     {
         [String]$KeyValue = $attrib.Item($_)
+        $config.Property.Add($key,$KeyValue)
     }
     ElseIf ($prop.PropertyType -eq "[string[]]")
     {
         [String[]]$KeyValue = $attrib.Item($_)
+        $config.Property.Add($key,$KeyValue)
     }
     ElseIf ($prop.PropertyType -eq "[bool]")
     {
@@ -93,13 +116,15 @@ $attrib.Keys | foreach-object {
         {
             [bool]$KeyValue = $false
         }
+        $config.Property.Add($key,$KeyValue)
     }
     ElseIf ($prop.PropertyType -eq "[int]")
     {
         [int]$KeyValue = $attrib.Item($_)
+        $config.Property.Add($key,$KeyValue)
     }
 
-    $config.Property.Add($key,$KeyValue)
+    
     }
 
 
