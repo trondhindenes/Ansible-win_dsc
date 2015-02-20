@@ -5,15 +5,16 @@
     resource_name="file"
     Ensure="Present"
     Type="Directory"
-    DestinationPath="C:\WordPress"
+    DestinationPath={{ WordPressPath }}
   tags:
     - Filesystem
 
-# - name: Remove default web site
-#   win_dsc5:
-#     resource_name="xWebSite"
-#     item_name="Default Web Site"
-#     Ensure="Absent"
+- name: Remove default web site
+  win_dsc5:
+    resource_name="xWebSite"
+    item_name="Default Web Site"
+    Ensure="Absent"
+    PhysicalPath="C:\inetput\wwwroot"
 
 - name: Make sure the WordPress Iis site is present
   win_dsc5:
@@ -23,7 +24,7 @@
     State="Started"
     DefaultPage="index.php"
     ApplicationPool="DefaultAppPool"
-    PhysicalPath="C:\WordPress"
+    PhysicalPath={{ WordPressPath }}
   tags:
     - WordPress
 
@@ -31,14 +32,14 @@
   win_dsc5:
     resource_name="xRemoteFile"
     Uri="http://WordPress.org/latest.zip"
-    DestinationPath="C:\packages\wordpress.zip"
+    DestinationPath="{{ PackagesPath }}\wordpress.zip"
   tags:
     - WordPress
 
 - name: Make sure wordpress file is in the root WP Directory
   win_dsc5:
     resource_name="xArchive"
-    Path="C:\packages\wordpress.zip"
-    Destination="C:\Wordpress"
+    Path="{{ PackagesPath }}\wordpress.zip"
+    Destination={{ WordPressPath }}
   tags:
     - WordPress
