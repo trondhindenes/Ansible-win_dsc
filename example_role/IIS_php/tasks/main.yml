@@ -5,7 +5,7 @@
     resource_name="file"
     Ensure="Present"
     Type="Directory"
-    DestinationPath="C:\packages"
+    DestinationPath="{{ PackageFolder }}"
   tags:
     - Filesystem
 
@@ -18,7 +18,7 @@
 - name: Visual C 2012 Thingy
   win_dsc5:
     resource_name="package"
-    path="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe"
+    path="{{ Vc2012RedistDownloadUri }}"
     item_name="Microsoft Visual C++ 2012 x64 Minimum Runtime - 11.0.61030"
     Arguments="/install /passive /norestart"
     ProductId="{CF2BEA3C-26EA-32F8-AA9B-331F7E34BA97}"
@@ -28,8 +28,8 @@
 - name: Make sure the PHP archive is in the package folder
   win_dsc5:
     resource_name="xRemoteFile"
-    uri=http://windows.php.net/downloads/releases/php-5.6.6-nts-Win32-VC11-x64.zip
-    DestinationPath="C:\php.zip"
+    uri="{{ phpDownloadUri }}"
+    DestinationPath="{{ PackageFolder }}\php.zip"
   tags:
     - Payload
     - Filesystem
@@ -37,8 +37,8 @@
 - name: Make sure the content of the PHP archine are in the PHP path
   win_dsc5:
     resource_name="Archive"
-    Path="C:\php.zip"
-    Destination="C:\php"
+    Path="{{ PackageFolder }}\php.zip"
+    Destination="{{ phpPath }}"
   tags:
     - Payload
     - Filesystem
