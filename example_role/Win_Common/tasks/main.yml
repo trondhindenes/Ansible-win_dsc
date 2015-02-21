@@ -1,0 +1,12 @@
+# tasks file for Win_Wordpress
+- name: Make sure the LCM refresh mode is disabled
+  win_lcm5:
+    refresh_mode: "Disabled"
+  tags:
+    - Config
+
+- name: Download required Packages
+  win_oneget:
+    name: "xPSDesiredStateConfiguration"
+  tags:
+    - Oneget
