@@ -3,8 +3,8 @@
 - name: Make sure the mySqlServer installer package is present
   win_dsc5:
     resource_name="Package"
-    Path="http://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-5.6.17.0.msi"
-    ProductId="{437AC169-780B-47A9-86F6-14D43C8F596B}"
+    Path="{{ mySqlInstallerUrl }}"
+    ProductId="{{ mySqlInstallerProductId }}"
     item_name="MySQL Installer"
 
 - name: Make sure the mySqlServer exists with the correct root credential
@@ -13,15 +13,15 @@
     ServiceName="MySqlService"
     Ensure="Present"
     RootPassword_username="mysqladmin"
-    RootPassword_password="MuchoSecrit"
+    RootPassword_password="{{ mySqlAdminPassword }}"
 
 - name: Make sure the MySql WordPress database exists
   win_dsc5:
     resource_name="xMySqlDatabase"
     Ensure="Present"
-    item_name="WordPressDB"
+    item_name="{{ wordpress_db_name }}"
     ConnectionCredential_username="mysqladmin"
-    ConnectionCredential_password="MuchoSecrit"
+    ConnectionCredential_password="{{ mySqlAdminPassword }}"
 
 - name: Make sure the MySql WordPress user exists
   win_dsc5:
@@ -29,15 +29,15 @@
     item_name="wordpressuser"
     Ensure="present"
     ConnectionCredential_username="mysqladmin"
-    ConnectionCredential_password="MuchoSecrit"
-    Credential_username="wordpressuser"
-    Credential_password="NotSoSecrit"
+    ConnectionCredential_password="{{ mySqlAdminPassword }}"
+    Credential_username="{{ wordpress_user_name }}"
+    Credential_password="{{ wordpress_user_password}}"
 
 - name: Make sure the MySql WordPress user has access to tho WordPress database
   win_dsc5:
     resource_name="xMySqlGrant"
     username="wordpressuser"
-    DatabaseName="WordPressDB"
+    DatabaseName="{{ wordpress_db_name }}"
     Ensure="present"
     ConnectionCredential_username="mysqladmin"
-    ConnectionCredential_password="MuchoSecrit"
+    ConnectionCredential_password="{{ mySqlAdminPassword }}"

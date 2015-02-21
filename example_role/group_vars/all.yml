@@ -1,0 +1,3 @@
+wordpress_db_name: 'WordpressDB'
+wordpress_user_name: 'wordpressuser'
+wordpress_user_password: 'NotSoSecrit'

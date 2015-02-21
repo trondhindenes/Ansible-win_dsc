@@ -43,3 +43,9 @@
     Destination={{ WordPressPath }}
   tags:
     - WordPress
+
+
+# - name: Test that we have a responding webservice
+#   win_get_url:
+#     url: 'http://{{ ansible_hostname }}/wordpress/wp-admin/setup-config.php'
+#     dest: 'C:\Temp\testfile.txt'

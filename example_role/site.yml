@@ -3,6 +3,7 @@
   hosts: windows
 
   roles:
+    - Win_Common
     - IIS_php
     - Win_MySQL
     - Win_Wordpress
