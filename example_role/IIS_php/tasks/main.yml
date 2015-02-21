@@ -1,5 +1,11 @@
 ---
 # tasks file for IIS_php
+- name: Download required Packages
+  win_oneget:
+    name: "xphp"
+  tags:
+    - Oneget
+
 - name: Ensure Packages Folder exists
   win_dsc5:
     resource_name="file"

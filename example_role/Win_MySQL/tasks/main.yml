@@ -1,5 +1,11 @@
 ---
 # tasks file for Win_MySQL
+- name: Download required Packages
+  win_oneget:
+    name: "xmysql"
+  tags:
+    - Oneget
+
 - name: Make sure the mySqlServer installer package is present
   win_dsc5:
     resource_name="Package"
