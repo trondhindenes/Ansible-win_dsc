@@ -23,20 +23,15 @@
 
 DOCUMENTATION = '''
 ---
-module: win_dsc5
+module: win_lcm5
 version_added: "1.8"
-short_description: Invokes a PowerShell DSC configuration
+short_description: Sets the PowerShell v5 Local Configuration Manager mode
 description:
-     - Invokes a PowerShell DSC Configuration. Requires PowerShell version 5 (February release or newer). Note that most of the parameters are dynamic and will vary
-	 depending on the DSC Resource. If the DSC resource takes a parameter named "Name", use the parameter "item_name" in Ansible to represent it.
-	 
-	 Also note that credentials are handled as follows: If the resource accepts a credential type property called "cred", the ansible parameters would be cred_username and cred_password. 
-	 These will be used to inject a credential object on the fly for the DSC resource.
-	 
+     
 options:
-  resource_name:
+  refresh_mode:
     description:
-      - The DSC Resource to use. Must be accessible to PowerShell using any of the default paths.
+      - The desired refresh mode. Valid options are "Disabled", "Push", "Pull"
     required: true
     default: null
     aliases: []
@@ -46,13 +41,8 @@ author: Trond Hindenes
 
 EXAMPLES = '''
 # Playbook example
-  - name: Extract zip file
-    win_dsc5:
-      resource_name="archive"
-      ensure="Present"
-      path="C:\Temp\zipfile.zip"
-      destination="C:\Temp\Temp2"
-
-
+  - name: Set LCM refresh mode to disabled
+    win_lcm5:
+      refresh_mode="Disabled"
 '''
 
