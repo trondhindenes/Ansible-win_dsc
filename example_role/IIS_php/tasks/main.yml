@@ -1,8 +1,14 @@
 ---
 # tasks file for IIS_php
-- name: Download required Packages
+- name: Download package xphp
   win_oneget:
     name: "xphp"
+  tags:
+    - Oneget
+
+- name: Download Package xWebAdministration
+  win_oneget:
+    name: "xWebAdministration"
   tags:
     - Oneget
 
