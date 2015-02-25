@@ -103,7 +103,17 @@ $attrib.Keys | foreach-object {
     }
     ElseIf ($prop.PropertyType -eq "[string[]]")
     {
-        [String[]]$KeyValue = $attrib.Item($_)
+        #KeyValue is an array of strings
+        [String]$TempKeyValue = $attrib.Item($_)
+        [String[]]$KeyValue = $TempKeyValue.Split(",").Trim()
+
+        $config.Property.Add($key,$KeyValue)
+    }
+    ElseIf ($prop.PropertyType -eq "[UInt32[]]")
+    {
+        #KeyValue is an array of integers
+        [String]$TempKeyValue = $attrib.Item($_)
+        [UInt32[]]$KeyValue = $attrib.Item($_.split(",").Trim())
         $config.Property.Add($key,$KeyValue)
     }
     ElseIf ($prop.PropertyType -eq "[bool]")
