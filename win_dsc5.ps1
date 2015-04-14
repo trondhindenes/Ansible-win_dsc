@@ -133,14 +133,42 @@ $attrib.Keys | foreach-object {
         [int]$KeyValue = $attrib.Item($_)
         $config.Property.Add($key,$KeyValue)
     }
-
-    
+    ElseIf ($prop.PropertyType -eq "[CimInstance[]]")
+    {
+      #KeyValue is an array of CimInstance
+      [CimInstance[]]$KeyVal = @()
+      [String]$TempKeyValue = $attrib.Item($_)
+      #Need to split on the string }, because some property values have commas in them
+      [String[]]$KeyValueStr = $TempKeyValue -split("},")
+      #Go through each string of properties and create a hash of them
+      foreach($str in $KeyValueStr)
+      {
+        [string[]]$properties = $str.Split("{")[1].Replace("}","").Trim().Split([environment]::NewLine).Trim()
+        $prph = @{}
+        foreach($p in $properties)
+        {
+          $pArr = $p -split "="
+          #if the value can be an int we must convert it to an int
+          if([bool]($pArr[1] -as [int] -is [int]))
+          {
+              $prph.Add($pArr[0].Trim(),$pArr[1].Trim() -as [int])
+          }
+          else
+          {
+              $prph.Add($pArr[0].Trim(),$pArr[1].Trim())
+          }
+        }
+        #create the new CimInstance
+        $cim = New-CimInstance -ClassName $str.Split("{")[0].Trim() -Property $prph -ClientOnly
+        #add the new CimInstance to the array
+        $KeyVal += $cim
+      }
+      $config.Property.Add($key,$KeyVal)
     }
-
+  }
 
 try
 {
-    
     $TestResult = Invoke-DscResource @Config -Method Test -ErrorVariable TestError -ErrorAction SilentlyContinue
     if (!($TestResult))
     {
