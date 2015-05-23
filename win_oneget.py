@@ -41,7 +41,7 @@ author: Trond Hindenes
 
 EXAMPLES = '''
 # Playbook example
-  - name: Set LCM refresh mode to disabled
+  - name: Install Chocolatey
     win_oneget:
       name: "Chocolatey"
 '''
