@@ -27,6 +27,7 @@ Set-Attr $result "changed" $false;
 $PackageName = Get-Attr -obj $params -name name -failifempty $true -resultobj $result
 $Force = Get-Attr -obj $params -name force
 $Ensure = Get-Attr -obj $params -name Ensure
+$Source = Get-Attr -obj $params -name source
 if (!($force)) {$force = $false}
 if (!($Ensure)) {$Ensure = "Present"}
 
@@ -39,13 +40,28 @@ foreach ($package in $packages)
     $package = get-package -name $PackageName -errorAction silentlyContinue
     if ((!$Package) -and ($ensure -eq "Present"))
     {
-        $FindPackage = find-package -name $packagename -errorAction SilentlyContinue -ForceBootstrap
+        if ($Source)
+        {
+          $FindPackage = find-package -name $packagename -source $Source -errorAction SilentlyContinue -ForceBootstrap
+        }
+        else
+        {
+          $FindPackage = find-package -name $packagename -errorAction SilentlyContinue -ForceBootstrap
+        }
+
         if (!($FindPackage))
         {
             Fail-Json -obj $result -message "Could not find package $package"
         }
 
-        Install-Package $PackageName -ForceBootstrap -Force
+        if ($Source) {
+          Install-Package $PackageName -Source $Source -ForceBootstrap -Force
+        }
+        else
+        {
+          Install-Package $PackageName -ForceBootstrap -Force
+        }
+
         Set-Attr $result "changed" $true;
     
     }

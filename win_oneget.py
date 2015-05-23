@@ -42,7 +42,7 @@ author: Trond Hindenes
 EXAMPLES = '''
 # Playbook example
   - name: Set LCM refresh mode to disabled
-    win_lcm5:
-      refresh_mode="Disabled"
+    win_oneget:
+      name: "Chocolatey"
 '''
 
