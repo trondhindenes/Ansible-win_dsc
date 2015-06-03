@@ -55,6 +55,6 @@ EXAMPLES = '''
   - name: Add cloudshare-staging package source
     win_oneget_source:
       name: "aspnetrelease"
-      provider: "Chocolatey"
+      provider: "NuGet"
       location: "https://www.myget.org/F/aspnetrelease"
 '''
