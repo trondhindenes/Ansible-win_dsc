@@ -54,7 +54,7 @@ EXAMPLES = '''
 # Playbook example
   - name: Add cloudshare-staging package source
     win_oneget_source:
-      name: "cloudshare-staging"
+      name: "aspnetrelease"
       provider: "Chocolatey"
-      location: "https://www.myget.org/F/cloudshare-staging/auth/api_key/api/v2"
+      location: "https://www.myget.org/F/aspnetrelease"
 '''
