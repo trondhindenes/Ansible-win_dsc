@@ -9,4 +9,5 @@ Also, make sure the required DSC resources exist on the managed node.
 
 You should also check out a few other repos related to DSC and Ansible:
 https://github.com/trondhindenes/AnsibleDscModuleGenerator
+
 https://github.com/trondhindenes/Ansible-Auto-Generated-Modules/tree/master
