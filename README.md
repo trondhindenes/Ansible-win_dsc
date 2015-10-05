@@ -6,3 +6,7 @@ Requires the WMF5 preview February 2015 version of PowerShell installed on the m
 Before using the win_dsc5 module, use the win_lcm5 module to set refresh mode to "Disabled" on the managed node.
 
 Also, make sure the required DSC resources exist on the managed node. 
+
+You should also check out a few other repos related to DSC and Ansible:
+https://github.com/trondhindenes/AnsibleDscModuleGenerator
+https://github.com/trondhindenes/Ansible-Auto-Generated-Modules/tree/master
