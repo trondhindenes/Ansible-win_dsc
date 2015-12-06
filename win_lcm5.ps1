@@ -19,6 +19,7 @@
 # WANT_JSON
 # POWERSHELL_COMMON
 
+#Temporary fix
 Set-StrictMode -Off
 
 $params = Parse-Args $args;
