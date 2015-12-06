@@ -19,6 +19,8 @@
 # WANT_JSON
 # POWERSHELL_COMMON
 
+Set-StrictMode -Off
+
 $params = Parse-Args $args;
 $result = New-Object psobject;
 Set-Attr $result "changed" $false;
