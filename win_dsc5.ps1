@@ -28,7 +28,7 @@ Set-Attr $result "changed" $false;
 
 $resourcename = Get-Attr -obj $params -name resource_name -failifempty $true -resultobj $result
 
-$Attributes = $params | get-member | where {$_.MemberTYpe -eq "noteproperty"} | where {$_.Name -ne "resource_name"} | select -ExpandProperty Name
+$Attributes = $params | get-member | where {$_.MemberTYpe -eq "noteproperty"} | where {$_.Name -ne "resource_name"} | where {$_.Name -notlike "_ansible_*"} | select -ExpandProperty Name
 
 
 if (!($Attributes))
@@ -49,7 +49,7 @@ $params.Keys | foreach-object {
     }
 #>
 
-$Keys = $params.psobject.Properties | where {$_.MemberTYpe -eq "Noteproperty"} | where {$_.Name -ne "resource_name"} | select -ExpandProperty Name
+$Keys = $params.psobject.Properties | where {$_.MemberTYpe -eq "Noteproperty"} | where {$_.Name -ne "resource_name"} | where {$_.Name -notlike "_ansible_*"} | select -ExpandProperty Name
 foreach ($key in $keys)
 {
     $Attrib.add($key, ($params.$key))
@@ -172,14 +172,14 @@ $attrib.Keys | foreach-object {
 
 try
 {
-    $TestResult = Invoke-DscResource @Config -Method Test -ErrorVariable TestError -ErrorAction SilentlyContinue
-    if (!($TestResult))
+    $TestResult = Invoke-DscResource @Config -Method Test -ModuleName PSDesiredStateConfiguration -ErrorVariable TestError -ErrorAction SilentlyContinue
+    if ($TestError)
     {
        throw ($TestError[0].Exception.Message)
     }
     ElseIf (($testResult.InDesiredState) -ne $true) 
     {
-        Invoke-DscResource -Method Set @Config -ErrorVariable SetError -ErrorAction SilentlyContinue
+        Invoke-DscResource -Method Set @Config -ModuleName PSDesiredStateConfiguration -ErrorVariable SetError -ErrorAction SilentlyContinue
         Set-Attr $result "changed" $true
         if ($SetError)
         {
