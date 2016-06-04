@@ -26,7 +26,7 @@ DOCUMENTATION = '''
 module: win_oneget_source
 version_added: "1.9"
 short_description: Add a package source to the OneGet package manager
-description:
+description: Add a package source to the OneGet package manager
      
 options:
   name:

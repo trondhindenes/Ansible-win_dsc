@@ -26,8 +26,7 @@ DOCUMENTATION = '''
 module: win_lcm5
 version_added: "1.8"
 short_description: Sets the PowerShell v5 Local Configuration Manager mode
-description:
-     
+description: Sets the PowerShell v5 Local Configuration Manager mode
 options:
   refresh_mode:
     description:

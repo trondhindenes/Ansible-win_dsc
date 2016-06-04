@@ -26,13 +26,11 @@ DOCUMENTATION = '''
 module: win_dsc5
 version_added: "1.8"
 short_description: Invokes a PowerShell DSC configuration
-description:
-     - Invokes a PowerShell DSC Configuration. Requires PowerShell version 5 (February release or newer). Note that most of the parameters are dynamic and will vary
-	 depending on the DSC Resource. If the DSC resource takes a parameter named "Name", use the parameter "item_name" in Ansible to represent it.
-	 
-	 Also note that credentials are handled as follows: If the resource accepts a credential type property called "cred", the ansible parameters would be cred_username and cred_password. 
-	 These will be used to inject a credential object on the fly for the DSC resource.
-	 
+description: |
+     Invokes a PowerShell DSC Configuration. Requires PowerShell version 5 (February release or newer). Note that most of the parameters are dynamic and will vary
+     depending on the DSC Resource. If the DSC resource takes a parameter named "Name", use the parameter "item_name" in Ansible to represent it.
+     Also note that credentials are handled as follows: If the resource accepts a credential type property called "cred", the ansible parameters would be cred_username and cred_password.
+     These will be used to inject a credential object on the fly for the DSC resource.
 options:
   resource_name:
     description:
@@ -40,7 +38,6 @@ options:
     required: true
     default: null
     aliases: []
-
 author: Trond Hindenes
 '''
 
@@ -52,7 +49,4 @@ EXAMPLES = '''
       ensure="Present"
       path="C:\Temp\zipfile.zip"
       destination="C:\Temp\Temp2"
-
-
 '''
-

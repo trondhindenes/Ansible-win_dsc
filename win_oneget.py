@@ -26,7 +26,7 @@ DOCUMENTATION = '''
 module: win_oneget
 version_added: "1.8"
 short_description: Install packages using the OneGet package manager
-description:
+description: Install packages using the OneGet package manager
      
 options:
   refresh_mode:
