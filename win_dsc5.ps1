@@ -69,6 +69,10 @@ if (!$Resource)
     Fail-Json -obj $result -message "Resource $resourcename not found"
 }
 
+#Get the Module that provides the resource. Will be used as 
+#mandatory argument for Invoke-DscResource
+$Module = $Resource.ModuleName
+
 #Convert params to correct datatype and inject
 #Convert params to correct datatype and inject
 $attrib.Keys | foreach-object {
@@ -172,14 +176,14 @@ $attrib.Keys | foreach-object {
 
 try
 {
-    $TestResult = Invoke-DscResource @Config -Method Test -ModuleName PSDesiredStateConfiguration -ErrorVariable TestError -ErrorAction SilentlyContinue
+    $TestResult = Invoke-DscResource @Config -Method Test -ModuleName $Module -ErrorVariable TestError -ErrorAction SilentlyContinue
     if ($TestError)
     {
        throw ($TestError[0].Exception.Message)
     }
     ElseIf (($testResult.InDesiredState) -ne $true) 
     {
-        Invoke-DscResource -Method Set @Config -ModuleName PSDesiredStateConfiguration -ErrorVariable SetError -ErrorAction SilentlyContinue
+        Invoke-DscResource -Method Set @Config -ModuleName $Module -ErrorVariable SetError -ErrorAction SilentlyContinue
         Set-Attr $result "changed" $true
         if ($SetError)
         {
