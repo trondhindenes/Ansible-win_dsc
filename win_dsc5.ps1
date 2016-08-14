@@ -22,9 +22,20 @@
 #Temporary fix
 Set-StrictMode -Off
 
-$params = Parse-Args $args;
+$params = Parse-Args $args -supports_check_mode $true
 $result = New-Object psobject;
 Set-Attr $result "changed" $false;
+
+$CheckMode = $False
+$CheckFlag = $params.psobject.Properties | where {$_.Name -eq "_ansible_check_mode"}
+if ($CheckFlag)
+{
+    if (($CheckFlag.Value) -eq $True)
+    {
+        $CheckMode = $True
+    }
+    
+}
 
 $resourcename = Get-Attr -obj $params -name resource_name -failifempty $true -resultobj $result
 
@@ -178,17 +189,25 @@ try
 {
     $TestResult = Invoke-DscResource @Config -Method Test -ModuleName $Module -ErrorVariable TestError -ErrorAction SilentlyContinue
     if ($TestError)
+
     {
        throw ($TestError[0].Exception.Message)
     }
     ElseIf (($testResult.InDesiredState) -ne $true) 
     {
-        Invoke-DscResource -Method Set @Config -ModuleName $Module -ErrorVariable SetError -ErrorAction SilentlyContinue
+		if ($CheckMode -eq $False)
+        {
+			Invoke-DscResource -Method Set @Config -ModuleName $Module -ErrorVariable SetError -ErrorAction SilentlyContinue
+		}
+		
+        
+
         Set-Attr $result "changed" $true
         if ($SetError)
         {
            throw ($SetError[0].Exception.Message)
         }
+
     }
 
 }
