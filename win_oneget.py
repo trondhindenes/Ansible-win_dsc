@@ -29,9 +29,9 @@ short_description: Install packages using the OneGet package manager
 description: Install packages using the OneGet package manager
      
 options:
-  refresh_mode:
+  name:
     description:
-      - The desired refresh mode. Valid options are "Disabled", "Push", "Pull"
+      - Name of the package to install
     required: true
     default: null
     aliases: []
