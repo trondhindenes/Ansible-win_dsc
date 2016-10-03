@@ -83,6 +83,9 @@ if (!$Resource)
 #Get the Module that provides the resource. Will be used as 
 #mandatory argument for Invoke-DscResource
 $Module = $Resource.ModuleName
+if (@($Module).Count -gt 1) {
+    Fail-Json -obj $result -message "Multiple DSC modules found with resource name [$($resourcename)]"
+}
 
 #Convert params to correct datatype and inject
 #Convert params to correct datatype and inject
