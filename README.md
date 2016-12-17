@@ -7,6 +7,24 @@ Before using the win_dsc5 module, use the win_lcm5 module to set refresh mode to
 
 Also, make sure the required DSC resources exist on the managed node.
 
+### If the DSC Resource need a Credential Object as Parameter do as follow:
+```
+Parametername_username
+Parametername_password
+```
+
+#### Example xADDomain
+```
+   - name: Installing Domain
+     win_dsc5:
+       resource_name: "xADDomain"
+       DomainName: "{{ads_domain_name}}"
+       DomainAdministratorCredential_username: "Administrator"
+       DomainAdministratorCredential_password: "{{ads_administrator_password}}"
+       SafemodeAdministratorPassword_username: "Administrator"
+       SafemodeAdministratorPassword_password: "{{ads_administrator_password}}"
+```
+
 You should also check out a few other repos related to DSC and Ansible:
 https://github.com/trondhindenes/AnsibleDscModuleGenerator
 
