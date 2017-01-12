@@ -25,6 +25,26 @@ Parametername_password
        SafemodeAdministratorPassword_password: "{{ads_administrator_password}}"
 ```
 
+### If the DSC Resource need a String Array as Parameter do as follow:
+```
+Parametername: "string1,string2"
+```
+The commaseperated string will get split and a Powershell String Array will get Attached to the Property.
+
+#### Example xSmbShare
+```
+   - name: Create Share
+      win_dsc5:
+        resource_name: "xSmbShare"
+        Ensure: "Present"
+        item_name: "MyShare"
+        Path: "C:\\Data\\MyShare"
+        Description: "This will be my Share"
+        ReadAccess: "Domain Users"
+        ChangeAccess: "User1,User2"
+        FullAccess: "Domain Admins"
+```
+
 You should also check out a few other repos related to DSC and Ansible:
 https://github.com/trondhindenes/AnsibleDscModuleGenerator
 
