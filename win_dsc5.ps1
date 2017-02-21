@@ -34,12 +34,13 @@ if ($CheckFlag)
     {
         $CheckMode = $True
     }
-    
+
 }
 
 $resourcename = Get-Attr -obj $params -name resource_name -failifempty $true -resultobj $result
 
-$Attributes = $params | get-member | where {$_.MemberTYpe -eq "noteproperty"} | where {$_.Name -ne "resource_name"} | where {$_.Name -notlike "_ansible_*"} | select -ExpandProperty Name
+#On Ansible 2.3 Devel params is now a Hash Array
+$Attributes = $params.GetEnumerator() | where {$_.key -ne "resource_name"} | where {$_.key -notlike "_ansible_*"}
 
 
 if (!($Attributes))
@@ -51,7 +52,14 @@ if (!($Attributes))
 set-attr -obj $result -name "resource_name" -value $resourcename
 set-attr -obj $result -name "Attributes" -value $Attributes
 
+# Build Attributes Hashtable for DSC Resource Propertys
 $Attrib = @{}
+foreach ($key in $Attributes)
+{
+    set-attr -obj $result -name $key.name -value $key.value
+    $Attrib.Add($Key.Key,$Key.Value)
+}
+Set-Attr -obj $result -name DSCAttributes = -value $Attrib
 
 <#
 $params.Keys | foreach-object {
@@ -59,13 +67,6 @@ $params.Keys | foreach-object {
     set-attr -obj $result -name $_ -value $params.Item($_)
     }
 #>
-
-$Keys = $params.psobject.Properties | where {$_.MemberTYpe -eq "Noteproperty"} | where {$_.Name -ne "resource_name"} | where {$_.Name -notlike "_ansible_*"} | select -ExpandProperty Name
-foreach ($key in $keys)
-{
-    $Attrib.add($key, ($params.$key))
-    set-attr -obj $result -name $key -value ($params.$key)
-}
 
 $Config = @{
    Name = ($resourcename)
@@ -80,7 +81,7 @@ if (!$Resource)
     Fail-Json -obj $result -message "Resource $resourcename not found"
 }
 
-#Get the Module that provides the resource. Will be used as 
+#Get the Module that provides the resource. Will be used as
 #mandatory argument for Invoke-DscResource
 $Module = $Resource.ModuleName
 if (@($Module).Count -gt 1) {
@@ -115,7 +116,7 @@ $attrib.Keys | foreach-object {
         {
             Fail-Json -obj $result -message "Property $key in resource $resourcename is not a valid property"
         }
-        
+
     }
     ElseIf ($prop.PropertyType -eq "[string]")
     {
@@ -196,14 +197,14 @@ try
     {
        throw ($TestError[0].Exception.Message)
     }
-    ElseIf (($testResult.InDesiredState) -ne $true) 
+    ElseIf (($testResult.InDesiredState) -ne $true)
     {
 		if ($CheckMode -eq $False)
         {
 			Invoke-DscResource -Method Set @Config -ModuleName $Module -ErrorVariable SetError -ErrorAction SilentlyContinue
 		}
-		
-        
+
+
 
         Set-Attr $result "changed" $true
         if ($SetError)
@@ -222,6 +223,3 @@ Catch
 
 #set-attr -obj $result -name "property" -value $property
 Exit-Json -obj $result
-
-
-
