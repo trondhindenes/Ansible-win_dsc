@@ -1,3 +1,7 @@
+# NOT MAINTAINED!!!
+
+win_dsc has been merged to ansible core, so please do not submit issues/pull requests against this repo. Please update your playbooks to use win_dsc from Ansible core.
+
 # Ansible-win_dsc
 Native DSC module for Ansible.
 
