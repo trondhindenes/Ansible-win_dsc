@@ -22,25 +22,15 @@
 #Temporary fix
 Set-StrictMode -Off
 
-$params = Parse-Args $args -supports_check_mode $true
 $result = New-Object psobject;
 Set-Attr $result "changed" $false;
 
-$CheckMode = $False
-$CheckFlag = $params.psobject.Properties | where {$_.Name -eq "_ansible_check_mode"}
-if ($CheckFlag)
-{
-    if (($CheckFlag.Value) -eq $True)
-    {
-        $CheckMode = $True
-    }
-
-}
-
-$resourcename = Get-Attr -obj $params -name resource_name -failifempty $true -resultobj $result
+$params = Parse-Args $args -supports_check_mode $true
 
 #On Ansible 2.3 Devel params is now a Hash Array
 $Attributes = $params.GetEnumerator() | where {$_.key -ne "resource_name"} | where {$_.key -notlike "_ansible_*"}
+$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
+$resourcename = Get-Attr -obj $params -name resource_name -failifempty $true -resultobj $result
 
 
 if (!($Attributes))
@@ -199,7 +189,7 @@ try
     }
     ElseIf (($testResult.InDesiredState) -ne $true)
     {
-		if ($CheckMode -eq $False)
+		if ($check_mode -eq $False)
         {
 			Invoke-DscResource -Method Set @Config -ModuleName $Module -ErrorVariable SetError -ErrorAction SilentlyContinue
 		}
